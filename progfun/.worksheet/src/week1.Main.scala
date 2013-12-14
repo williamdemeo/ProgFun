@@ -25,18 +25,20 @@ object Main {;import org.scalaide.worksheet.runtime.library.WorksheetSupport._; 
 	pascal(1,4);System.out.println("""res11: Int = """ + $show(res$11));$skip(13); val res$12 = 
 	pascal(2,4);System.out.println("""res12: Int = """ + $show(res$12));$skip(13); val res$13 = 
 	pascal(3,4);System.out.println("""res13: Int = """ + $show(res$13));$skip(13); val res$14 = 
-	pascal(4,4);System.out.println("""res14: Int = """ + $show(res$14));$skip(11); val res$15 = 
+	pascal(4,4);System.out.println("""res14: Int = """ + $show(res$14));$skip(15); 
 	
-	cnt = 0;System.out.println("""res15: <error> = """ + $show(res$15));$skip(256); 
+	val cnt = 0;System.out.println("""cnt  : Int = """ + $show(cnt ));$skip(249); 
 	def balance(chars: List[Char]): Boolean = {
 		if (cnt < 0) false
-		if (chars.isEmpty)
-			if (cnt ==0) true else false
-		hchar = chars.head
-		chars = chars.tail
-		if (hchar=="(") cnt++
 		else
-			if (hcar==")") cnt--
-		if cnt<0 false else balance(chars)
+			if (chars.isEmpty) {
+				if (cnt ==0) true else false
+			}
+			else {
+				if (chars.head=="(") cnt = cnt+1
+				else
+					if (hcar==")") cnt--
+				balance(chars.tail)
+			}
 	};System.out.println("""balance: (chars: List[Char])Boolean""")}
 }

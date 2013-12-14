@@ -1,6 +1,6 @@
 package week2
 
-object exercise {
+object exercise1 {
   println("Welcome to the Scala worksheet")       //> Welcome to the Scala worksheet
   // This is a tail recursive version of the standard factorial function.
 	// This is mainly an academic exercise, since the factorial grows so quickly that
@@ -30,3 +30,5 @@ object exercise {
 	factorial(4)                              //> res6: Int = 24
   
 }
+
+	// Lecture 2.1:  Higher Order Functions
