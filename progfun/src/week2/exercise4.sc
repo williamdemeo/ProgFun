@@ -1,6 +1,7 @@
 package week2
 import math.abs
 
+// Lecture 2.3: Finding Fixed Points
 object exercise4 {
 	val tolerance = 0.0001                    //> tolerance  : Double = 1.0E-4
 	def isCloseEnough(x: Double, y: Double) =
