@@ -1,5 +1,5 @@
 package recfun
-import common._
+//import common._
 
 object Main {
   def main(args: Array[String]) {
@@ -41,26 +41,5 @@ object Main {
   /**
    * Exercise 3
    */
-  def countChange(money: Int, coins: List[Int]): Int = {
-    if (money <= 0 || coins.isEmpty) 0
-    else {
-      val c = coins.sortWith(_<_)
-      countChangeAux(money, c, 0, c(0))
-    }
-  }
-  def countChangeAux(money: Int, coins: List[Int], acc: Int, lastCoin: Int): Int = {
-    if (money < 0) {
-    	acc
-    } else if (money == 0) {
-    	acc+1
-    } else {
-    	for (k <- coins) {
-    		if (k >= lastCoin) {
-    			countChangeAux(money-k, coins, acc, k)
-    		}
-      }
-          
-    }
-  }
 
 }
