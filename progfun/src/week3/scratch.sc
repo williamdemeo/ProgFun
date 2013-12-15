@@ -5,7 +5,7 @@ import week3.Rational
 //   import week3.{Rational, Hello}
 
 object scratch {
-	new Rational(1, 2)                        //> res0: week3.Rational = 1/2
+	new Rational(1, 2)
 	
 	def error(msg: String) = throw new Error(msg)
                                                   //> error: (msg: String)Nothing
