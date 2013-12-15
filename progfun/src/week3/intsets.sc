@@ -4,8 +4,8 @@ package week3
 // In this lecture, we implement sets as binary trees.
 
 object intsets {
-	val t1 = new NonEmpty(3, new Empty, new Empty)
-                                                  //> t1  : week3.NonEmpty = {.3.}
+	//val t1 = new NonEmpty(3, new Empty, new Empty)
+	val t1 = new NonEmpty(3, Empty, Empty)    //> t1  : week3.NonEmpty = {.3.}
 	val t2 = t1.incl(4)                       //> t2  : week3.IntSet = {.3{.4.}}
 }
 
@@ -22,20 +22,35 @@ abstract class IntSet {
 
 }
 
+// Concept: persistent data structures
+// The old version of the data structure is maintained;
+// instead of changing it, a new one is created.
+
+
 // Class Extensions
 // Empty and NonEmpty will be subclasses of IntSet
 
-class Empty extends IntSet {
+// Actually, there is no reason to make Empty a class.  We only need one empty set.
+//class Empty extends IntSet {
+// 	def contains(x: Int): Boolean = false
+//	def incl(x: Int): IntSet = new NonEmpty(x, new Empty, new Empty)
+//	override def toString = "."
+//}
+
+
+// We only need one empty set, so we make it an object instead of a class.
+object Empty extends IntSet {
 	def contains(x: Int): Boolean = false
-	def incl(x: Int): IntSet = new NonEmpty(x, new Empty, new Empty)
+	//def incl(x: Int): IntSet = new NonEmpty(x, new Empty, new Empty)
+	// Since `Empty` is already an object, we don't need `new`
+	def incl(x: Int): IntSet = new NonEmpty(x, Empty, Empty)
 	override def toString = "."
 }
-// Persistent data structures: the old version of the data structure
-// is maintained; instead of changing it, a new one is created.
 
-// Notice that empty, left, right are fields of the class.
-// Fields need not be explicitly declared.
+
 class NonEmpty(elem: Int, left: IntSet, right: IntSet) extends IntSet {
+	// Notice that empty, left, right are fields of the class.
+	// Fields need not be explicitly declared.
 
 	// check if x is somewhere in the tree
 	def contains(x: Int): Boolean =
