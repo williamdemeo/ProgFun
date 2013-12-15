@@ -23,8 +23,8 @@ abstract class IntSet {
 }
 
 // Class Extensions
+// Empty and NonEmpty will be subclasses of IntSet
 
-// IntSet is the superclass of Empty and NonEmpty classes (defined below)
 class Empty extends IntSet {
 	def contains(x: Int): Boolean = false
 	def incl(x: Int): IntSet = new NonEmpty(x, new Empty, new Empty)
