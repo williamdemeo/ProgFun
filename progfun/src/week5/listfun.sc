@@ -1,7 +1,8 @@
 package week5
 
 
-// Lecture 5.4: run-length encoding
+// Lecture 5.4: Higher Order List Functions (application: run-length encoding)
+// Lecture 5.5: Reduction of Lists
 //
 object listfun {
 	val nums = List(2, -4, 5, 7, 1)           //> nums  : List[Int] = List(2, -4, 5, 7, 1)
@@ -33,4 +34,41 @@ object listfun {
 		
 	encode(data)                              //> res7: List[(String, Int)] = List((a,3), (b,1), (c,2), (a,1))
 	
+	def sum(xs: List[Int]) = (0 :: xs) reduceLeft ((x, y) => x + y)
+                                                  //> sum: (xs: List[Int])Int
+	def product(xs: List[Int]) = (1 :: xs) reduceLeft ((x, y) => x * y)
+                                                  //> product: (xs: List[Int])Int
+	// The n-th underscore is shorthand for the n-th parameter
+	def sum2(xs: List[Int]) = (0 :: xs) reduceLeft (_ + _)
+                                                  //> sum2: (xs: List[Int])Int
+	def product2(xs: List[Int]) = (1 :: xs) reduceLeft (_ * _)
+                                                  //> product2: (xs: List[Int])Int
+	def sum3(xs: List[Int]) = (xs foldLeft 0) (_ + _)
+                                                  //> sum3: (xs: List[Int])Int
+	def product3(xs: List[Int]) = (xs foldLeft 1) (_ * _)
+                                                  //> product3: (xs: List[Int])Int
+
+	def concat[T](xs: List[T], ys: List[T]): List[T] = (xs foldRight ys)(_ :: _)
+                                                  //> concat: [T](xs: List[T], ys: List[T])List[T]
+
+	sum(nums)                                 //> res8: Int = 11
+	sum2(nums)                                //> res9: Int = 11
+	sum3(nums)                                //> res10: Int = 11
+	product(nums)                             //> res11: Int = -280
+	product2(nums)                            //> res12: Int = -280
+	product3(nums)                            //> res13: Int = -280
+	
+	concat(fruits, data)                      //> res14: List[String] = List(apple, pineapple, orange, banana, a, a, a, b, c,
+                                                  //|  c, a)
+                                                  
 }
+
+
+
+
+
+
+
+
+
+   
