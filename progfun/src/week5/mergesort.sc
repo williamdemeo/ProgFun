@@ -9,7 +9,7 @@ package week5
 // Here's a first attempt at merge sort:
 object mergesort {
 
-	def msort[T](xs: List[T])(lt: (T, T) => Boolean): List[T] = {
+	def msort[T](xs: List[T])(ord: Ordering[T]): List[T] = {
 		val n = xs.length/2
 		if (n == 0) xs
 		else {
@@ -18,19 +18,18 @@ object mergesort {
 				case (Nil, ys) => ys
 				case (xs, Nil) => xs
 				case (x :: xst, y :: yst) =>
-					if (lt(x, y)) x :: merge(xst, ys)
+					if (ord.lt(x, y)) x :: merge(xst, ys)
 					else y :: merge(xs, yst)
 			}
 			val (first, second) = xs splitAt n
-			merge(msort(first)(lt), msort(second)(lt))
+			merge(msort(first)(ord), msort(second)(ord))
 		}
-	}                                         //> msort: [T](xs: List[T])(lt: (T, T) => Boolean)List[T]
+	}                                         //> msort: [T](xs: List[T])(ord: Ordering[T])List[T]
 
 	val x = List(5, 2, -4, 9, 7)              //> x  : List[Int] = List(5, 2, -4, 9, 7)
 	val fruits = List("apple", "pineapple", "orange", "banana")
                                                   //> fruits  : List[String] = List(apple, pineapple, orange, banana)
 	
-	msort(x)((x, y) => x < y)                 //> res0: List[Int] = List(-4, 2, 5, 7, 9)
-	msort(fruits)((x: String, y: String) => x.compareTo(y) < 0)
-                                                  //> res1: List[String] = List(apple, banana, orange, pineapple)
+	msort(x)(Ordering.Int)                    //> res0: List[Int] = List(-4, 2, 5, 7, 9)
+	msort(fruits)(Ordering.String)            //> res1: List[String] = List(apple, banana, orange, pineapple)
 }
