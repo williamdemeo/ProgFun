@@ -7,24 +7,24 @@ package week5
 // Otherwise, split the list in two, sort the parts, then merge them.
 // Here's a first attempt at merge sort:
 object mergesort {
-	val pair = ("answer", 42)                 //> pair  : (String, Int) = (answer,42)
+
 	def msort(xs: List[Int]): List[Int] = {
 		val n = xs.length/2
 		if (n == 0) xs
 		else {
 			def merge(xs: List[Int], ys: List[Int]): List[Int] =
-			xs match {
-				case Nil => ys
-				case x :: xst =>
-					ys match {
-						case Nil => xs
-						case y :: yst =>
-							if (x < y) x :: merge(xst, ys)
-							else y :: merge(xs, yst)
-					}
+			(xs, ys) match {
+				case (Nil, ys) => ys
+				case (xs, Nil) => xs
+				case (x :: xst, y :: yst) =>
+					if (x < y) x :: merge(xst, ys)
+					else y :: merge(xs, yst)
 			}
 			val (first, second) = xs splitAt n
 			merge(msort(first), msort(second))
 		}
 	}                                         //> msort: (xs: List[Int])List[Int]
+
+	val x = List(5, 2, 4, 9, 7)               //> x  : List[Int] = List(5, 2, 4, 9, 7)
+	msort(x)                                  //> res0: List[Int] = List(2, 4, 5, 7, 9)
 }
