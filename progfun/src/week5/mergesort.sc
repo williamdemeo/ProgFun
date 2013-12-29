@@ -9,7 +9,7 @@ package week5
 // Here's a first attempt at merge sort:
 object mergesort {
 
-	def msort[T](xs: List[T])(ord: Ordering[T]): List[T] = {
+	def msort[T](xs: List[T])(implicit ord: Ordering[T]): List[T] = {
 		val n = xs.length/2
 		if (n == 0) xs
 		else {
@@ -22,14 +22,14 @@ object mergesort {
 					else y :: merge(xs, yst)
 			}
 			val (first, second) = xs splitAt n
-			merge(msort(first)(ord), msort(second)(ord))
+			merge(msort(first), msort(second))
 		}
-	}                                         //> msort: [T](xs: List[T])(ord: Ordering[T])List[T]
+	}                                         //> msort: [T](xs: List[T])(implicit ord: Ordering[T])List[T]
 
 	val x = List(5, 2, -4, 9, 7)              //> x  : List[Int] = List(5, 2, -4, 9, 7)
 	val fruits = List("apple", "pineapple", "orange", "banana")
                                                   //> fruits  : List[String] = List(apple, pineapple, orange, banana)
 	
-	msort(x)(Ordering.Int)                    //> res0: List[Int] = List(-4, 2, 5, 7, 9)
-	msort(fruits)(Ordering.String)            //> res1: List[String] = List(apple, banana, orange, pineapple)
+	msort(x)                                  //> res0: List[Int] = List(-4, 2, 5, 7, 9)
+	msort(fruits)                             //> res1: List[String] = List(apple, banana, orange, pineapple)
 }
