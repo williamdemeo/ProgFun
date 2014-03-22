@@ -14,7 +14,7 @@ object exercise1 {
 			
 		if (x<0) {
 			-1
-		} else if (x<=0) {
+		} else if (x==0) {
 			1
 		} else {
 			factorialTailRecursive(x,1)
