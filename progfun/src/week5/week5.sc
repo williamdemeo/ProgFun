@@ -10,7 +10,14 @@ object week5 {
 
 
 	val empty = List()                        //> empty  : List[Nothing] = List()
+
+	// This answer (given in the video) is incorrect:
+	// def removeAt(n: Int, xs: List[Int]) = (xs take n) ::: (xs drop n+1)
+
+	// Here is the correct answer:
+	def removeAt[T](n: Int, xs: List[T]) = (xs take n) ::: (xs drop n+1)
+                                                  //> removeAt: [T](n: Int, xs: List[T])List[T]
+
 	
-	def removeAt(n: Int, xs: List[Int]) = (xs take n) ::: (xs drop n+1)
-                                                  //> removeAt: (n: Int, xs: List[Int])List[Int]
+	removeAt(1, List('a', 'b', 'c', 'd'))     //> res0: List[Char] = List(a, c, d)
 }

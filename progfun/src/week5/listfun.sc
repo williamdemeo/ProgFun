@@ -1,65 +1,104 @@
 package week5
 
+// Lecture 4.7
+// Insertion sort exercise:
+object insertionsort {
+
+	def isort(xs: List[Int]): List[Int] = xs match {
+		case List() => List()
+		case y :: ys => insert(y, isort(ys))
+	}                                         //> isort: (xs: List[Int])List[Int]
+
+	def insert(x: Int, xs: List[Int]): List[Int] = xs match {
+		case List() => List(x)
+		case y :: ys => if (x <= y) x :: xs else y :: insert(x, ys)
+	}                                         //> insert: (x: Int, xs: List[Int])List[Int]
+}
+
+// Lecture 5.1: More Functions on Lists
+object initandconcatfunctions {
+
+	// exercise: init function
+	def init[T](xs: List[T]): List[T] = xs match {
+		case List() => throw new Error("init on empty list")
+		case List(x) => List()
+		case y :: ys => y :: init(ys)
+	}
+	
+	// concat function (complexity: n)
+	def concat[T](xs: List[T], ys: List[T]): List[T] = xs match {
+		case List() => ys
+		case z :: zs => z :: concat(zs, ys)
+	}
+	
+	// reverse function  (complexity: n^2)
+	def reverse[T](xs: List[T]): List[T] = xs match {
+		case List() => xs
+		case y :: ys => reverse(ys) ++ List(y)
+	}
+	
+	// exercise: remove nth element
+	// My first attempt (I believe this works, but below there's a better version):
+	//def removeAt[T](n: Int, xs: List[T]): List[T] = xs match {
+	//		case List() => throw new Error("removeAt called on empty list")
+			//case y :: ys => if (n == 0) ys else y :: removeAt(n-1, ys)
+		//}
+	 
+	// The answer given in the video (which is incorrect):
+	// def removeAt(n: Int, xs: List[Int]) = (xs take n) ::: (xs drop n+1)
+
+	// My second attempt (this works---see week5.sc worksheet for tests)
+	def removeAt[T](n: Int, xs: List[T]) = (xs take n) ::: (xs drop n+1)
+
+}
 
 // Lecture 5.4: Higher Order List Functions (application: run-length encoding)
 // Lecture 5.5: Reduction of Lists
 //
 object listfun {
-	val nums = List(2, -4, 5, 7, 1)           //> nums  : List[Int] = List(2, -4, 5, 7, 1)
+	val nums = List(2, -4, 5, 7, 1)
 	val fruits = List("apple", "pineapple", "orange", "banana")
-                                                  //> fruits  : List[String] = List(apple, pineapple, orange, banana)
 
-	nums filter (x => x > 0)                  //> res0: List[Int] = List(2, 5, 7, 1)
-	nums filterNot (x => x > 0)               //> res1: List[Int] = List(-4)
-	nums partition (x => x > 0)               //> res2: (List[Int], List[Int]) = (List(2, 5, 7, 1),List(-4))
+	nums filter (x => x > 0)
+	nums filterNot (x => x > 0)
+	nums partition (x => x > 0)
 
 	// Longest prefix of the list for which predicate is true
-	nums takeWhile (x => x > 0)               //> res3: List[Int] = List(2)
-	nums dropWhile (x => x > 0)               //> res4: List[Int] = List(-4, 5, 7, 1)
-	nums span (x => x > 0)                    //> res5: (List[Int], List[Int]) = (List(2),List(-4, 5, 7, 1))
+	nums takeWhile (x => x > 0)
+	nums dropWhile (x => x > 0)
+	nums span (x => x > 0)
 	
 	val data = List("a", "a", "a", "b", "c", "c", "a")
-                                                  //> data  : List[String] = List(a, a, a, b, c, c, a)
 	def pack[T](xs: List[T]): List[List[T]] = xs match {
 		case Nil => Nil
 		case x :: xt =>
 			val (first, rest) = xs span (y => y == x)
 			first :: pack(rest)
-	}                                         //> pack: [T](xs: List[T])List[List[T]]
-	pack(data)                                //> res6: List[List[String]] = List(List(a, a, a), List(b), List(c, c), List(a))
-                                                  //| 
+	}
+	pack(data)
 	def encode[T](xs: List[T]): List[(T, Int)] =
 		pack(xs) map (ys => (ys.head, ys.length))
-                                                  //> encode: [T](xs: List[T])List[(T, Int)]
 		
-	encode(data)                              //> res7: List[(String, Int)] = List((a,3), (b,1), (c,2), (a,1))
+	encode(data)
 	
 	def sum(xs: List[Int]) = (0 :: xs) reduceLeft ((x, y) => x + y)
-                                                  //> sum: (xs: List[Int])Int
 	def product(xs: List[Int]) = (1 :: xs) reduceLeft ((x, y) => x * y)
-                                                  //> product: (xs: List[Int])Int
 	// The n-th underscore is shorthand for the n-th parameter
 	def sum2(xs: List[Int]) = (0 :: xs) reduceLeft (_ + _)
-                                                  //> sum2: (xs: List[Int])Int
 	def product2(xs: List[Int]) = (1 :: xs) reduceLeft (_ * _)
-                                                  //> product2: (xs: List[Int])Int
 	def sum3(xs: List[Int]) = (xs foldLeft 0) (_ + _)
-                                                  //> sum3: (xs: List[Int])Int
 	def product3(xs: List[Int]) = (xs foldLeft 1) (_ * _)
-                                                  //> product3: (xs: List[Int])Int
 
 	def concat[T](xs: List[T], ys: List[T]): List[T] = (xs foldRight ys)(_ :: _)
-                                                  //> concat: [T](xs: List[T], ys: List[T])List[T]
 
-	sum(nums)                                 //> res8: Int = 11
-	sum2(nums)                                //> res9: Int = 11
-	sum3(nums)                                //> res10: Int = 11
-	product(nums)                             //> res11: Int = -280
-	product2(nums)                            //> res12: Int = -280
-	product3(nums)                            //> res13: Int = -280
+	sum(nums)
+	sum2(nums)
+	sum3(nums)
+	product(nums)
+	product2(nums)
+	product3(nums)
 	
-	concat(fruits, data)                      //> res14: List[String] = List(apple, pineapple, orange, banana, a, a, a, b, c,
-                                                  //|  c, a)
+	concat(fruits, data)
                                                   
 }
 
