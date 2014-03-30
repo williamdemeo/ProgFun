@@ -2,9 +2,9 @@ package week4
 
 // Lecture 3.3 -- Polymorphism
 trait List[+T] {
-	def isEmpty: Boolean  // method what kind of list: Empty or Cons
+	def isEmpty: Boolean  // what kind of list, Empty or Cons?
 	def head: T           // the first element of the list
-	def tail: List[T]     // the remaining list
+	def tail: List[T]     // the remainder
 
 	// Lecture 4.4 -- Variance
 	def prepend [U >: T](elem: U): List[U] = new Cons(elem, this)
