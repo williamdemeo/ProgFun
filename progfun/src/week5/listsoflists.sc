@@ -1,83 +1,38 @@
-package week5review
+package week5
 
-object listfun {
-  val nums = List(2, -4, 5, 7, 1)                 //> nums  : List[Int] = List(2, -4, 5, 7, 1)
-  val fruits = List("apple", "pineapple", "orange", "banana")
-                                                  //> fruits  : List[String] = List(apple, pineapple, orange, banana)
-  
-  nums filter (x => x>0)                          //> res0: List[Int] = List(2, 5, 7, 1)
-  nums filterNot (x => x > 0)                     //> res1: List[Int] = List(-4)
-  // do both in a single traversal
-  nums partition (x => x > 0)                     //> res2: (List[Int], List[Int]) = (List(2, 5, 7, 1),List(-4))
-  
-  nums takeWhile (x => x>0)                       //> res3: List[Int] = List(2)
-  nums dropWhile (x => x>0)                       //> res4: List[Int] = List(-4, 5, 7, 1)
-  // do both in a single traversal
-  nums span (x => x>0)                            //> res5: (List[Int], List[Int]) = (List(2),List(-4, 5, 7, 1))
-  
-  // Exercise: Lecture 5.4 at 10'45"
-  //
-  // Write a function that packs lists like this one:
-  //    List("a", "a", "a", "b", "c", "c", "a")
-  // and returns the list
-  //    List(List("a", "a", "a"), List("b"), List("c", "c"), List("a"))
-  //
- 	def pack[T](xs: List[T]): List[List[T]] = xs match {
-		case Nil => Nil
- 	 	case y :: ys =>
- 	 		val (xs1, xs2) = xs span (x => (x==y))
- 	 		xs1 :: pack(xs2)
- 	}                                         //> pack: [T](xs: List[T])List[List[T]]
- 	 
- 	 // Test it:
- 	 val mylist = List("a", "a", "a", "b", "c", "c", "c", "c", "a")
-                                                  //> mylist  : List[String] = List(a, a, a, b, c, c, c, c, a)
- 	 
- 	 val myPlist = pack(mylist)               //> myPlist  : List[List[String]] = List(List(a, a, a), List(b), List(c, c, c, c
-                                                  //| ), List(a))
-  // Exercise: Lecture 5.4 at 12'45"
-  //
-  // Write a function that produces a runlength encoding of a list:
-  // Input:
-  //    List("a", "a", "a", "b", "c", "c", "a")
-  // Output:
-  //    List(("a", 3), ("b", 1), ("c", 2), ("a", 1))
-  //
- 	def encode[T](xs: List[T]): List[(T, Int)] = xs match {
- 		case Nil => Nil
- 		case y :: ys => {
- 			val (xs1, xs2) = xs span (x => (x==y))
- 			(y, xs1.length) :: encode(xs2)
- 		}
- 		
- 	}                                         //> encode: [T](xs: List[T])List[(T, Int)]
- 	
- 	encode(mylist)                            //> res6: List[(String, Int)] = List((a,3), (b,1), (c,4), (a,1))
- 	
+// Practice with lists, and some useful list functions.
 
-	def max2 (x: Int, y: Int): Int = if (x > y) x else y
-                                                  //> max2: (x: Int, y: Int)Int
- 	def maxn (xs: List[Int]): Int = xs match {
-	 	case Nil => throw new Error("maxx called on Nil list")
-	 	case List(x) => x
-	 	case y :: ys => max2(y, maxn(ys))
- 	}                                         //> maxn: (xs: List[Int])Int
- 
- 	maxn(nums)                                //> res7: Int = 7
+object listoflists {
+
+	// Max of a list of Ints
+ 	def maxn (xs: List[Int]) = (xs reduceLeft)(_ max _)
+                                                  //> maxn: (xs: List[Int])Int
+	// Tests:
+ 	maxn(List(2, -4, 5))                      //> res0: Int = 5
+ 	maxn(List(2))                             //> res1: Int = 2
  	
- 	def maxLen[T](xs: List[T], ys: List[T]): Int = if (xs.length > ys.length) xs.length else ys.length
-                                                  //> maxLen: [T](xs: List[T], ys: List[T])Int
-                                                  
 	def maxLens[T](xs: List[List[T]]): Int = xs match {
 		case Nil => throw new Error("maxLens called on Nil list")
 		case List(t) => t.length
-		case y :: ys => max2(y.length, maxLens(ys))
+		case y :: ys => y.length max maxLens(ys)
 	}                                         //> maxLens: [T](xs: List[List[T]])Int
+ 	
 
+	// Take a list of lists and return the length of the longest one.
+	def maxLenRed[T](xs: List[List[T]]) = (xs map (x=>x.length)) reduceLeft (_ max _)
+                                                  //> maxLenRed: [T](xs: List[List[T]])Int
 
+	// Take a list of lists and perform reduceLeft op on the lengths of the lists
+	def opLen[T](xs: List[List[T]])(op: (Int, Int) => Int) = (xs map (x=>x.length)) reduceLeft op
+                                                  //> opLen: [T](xs: List[List[T]])(op: (Int, Int) => Int)Int
 
-	maxLens(myPlist)                          //> res8: Int = 4
-	
+	def minLen2[T](xs: List[List[T]]) = opLen(xs)(_ min _)
+                                                  //> minLen2: [T](xs: List[List[T]])Int
+
+  val myPlist = List(List("a", "a", "a"), List("b"), List("c", "c"))
+                                                  //> myPlist  : List[List[String]] = List(List(a, a, a), List(b), List(c, c))
+	maxLens(myPlist)                          //> res2: Int = 3
+	maxLenRed(myPlist)                        //> res3: Int = 3
 
 	// Take a list of lists and return the index of the shortest one
 	def minLenIdx[T](xs: List[List[T]]): Int = {
@@ -85,10 +40,8 @@ object listfun {
 	}                                         //> minLenIdx: [T](xs: List[List[T]])Int
 
 	// Take a list of lists and return the length of the shortest one
-	def minLen[T](xs: List[List[T]]): Int = {
-		(xs map(x => x.length)).min
-	}                                         //> minLen: [T](xs: List[List[T]])Int
-	
+	def minLen[T](xs: List[List[T]]) = (xs map(x => x.length)).min
+                                                  //> minLen: [T](xs: List[List[T]])Int
 
 	// append a to the n-th list in a list of lists
 	def pushAt[T](xs: List[List[T]], a: T, n: Int): List[List[T]] = {
@@ -117,21 +70,21 @@ object listfun {
 	val mynewlist = List(List("a", "a", "a"), List("c", "c", "c"), List("q", "q", "q"))
                                                   //> mynewlist  : List[List[String]] = List(List(a, a, a), List(c, c, c), List(q
                                                   //| , q, q))
-  minLen(mynewlist)                               //> res9: Int = 3
-  minLenIdx(mynewlist)                            //> res10: Int = 0
-	pushAt(mynewlist, "d", 2)                 //> res11: List[List[String]] = List(List(a, a, a), List(c, c, c), List(q, q, q
-                                                  //| , d))
-	pushAtShortest(mynewlist, "d")            //> res12: List[List[String]] = List(List(a, a, a, d), List(c, c, c), List(q, q
-                                                  //| , q))
+  minLen(mynewlist)                               //> res4: Int = 3
+  minLenIdx(mynewlist)                            //> res5: Int = 0
+	pushAt(mynewlist, "d", 2)                 //> res6: List[List[String]] = List(List(a, a, a), List(c, c, c), List(q, q, q,
+                                                  //|  d))
+	pushAtShortest(mynewlist, "d")            //> res7: List[List[String]] = List(List(a, a, a, d), List(c, c, c), List(q, q,
+                                                  //|  q))
 
-	newRow(mynewlist, "f")                    //> res13: List[List[String]] = List(List(a, a, a), List(c, c, c), List(q, q, q
-                                                  //| ), List(f))
+	newRow(mynewlist, "f")                    //> res8: List[List[String]] = List(List(a, a, a), List(c, c, c), List(q, q, q)
+                                                  //| , List(f))
 	newRow(pushAtShortest(mynewlist, "d"), "f")
-                                                  //> res14: List[List[String]] = List(List(a, a, a, d), List(c, c, c), List(q, q
-                                                  //| , q), List(f))
+                                                  //> res9: List[List[String]] = List(List(a, a, a, d), List(c, c, c), List(q, q,
+                                                  //|  q), List(f))
 
 	pushAtShortest(newRow(mynewlist, "f"), "d")
-                                                  //> res15: List[List[String]] = List(List(a, a, a), List(c, c, c), List(q, q, q
+                                                  //> res10: List[List[String]] = List(List(a, a, a), List(c, c, c), List(q, q, q
                                                   //| ), List(f, d))
 
 	                                                   

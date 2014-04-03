@@ -102,6 +102,62 @@ object listfun {
                                                   
 }
 
+// Review of Week 5:
+object listfun2 {
+
+  val nums = List(2, -4, 5, 7, 1)
+  val fruits = List("apple", "pineapple", "orange", "banana")
+  
+  nums filter (x => x>0)
+  nums filterNot (x => x > 0)
+  // do both in a single traversal
+  nums partition (x => x > 0)
+  
+  nums takeWhile (x => x>0)
+  nums dropWhile (x => x>0)
+  // do both in a single traversal
+  nums span (x => x>0)
+  
+  // Exercise: Lecture 5.4 at 10'45"
+  //
+  // Write a function that packs lists like this one:
+  //    List("a", "a", "a", "b", "c", "c", "a")
+  // and returns the list
+  //    List(List("a", "a", "a"), List("b"), List("c", "c"), List("a"))
+  //
+ 	def pack[T](xs: List[T]): List[List[T]] = xs match {
+		case Nil => Nil
+ 	 	case y :: ys =>
+ 	 		val (xs1, xs2) = xs span (x => (x==y))
+ 	 		xs1 :: pack(xs2)
+ 	}
+ 	 
+ 	 // Test it:
+ 	 val mylist = List("a", "a", "a", "b", "c", "c", "c", "c", "a")
+ 	 
+ 	 val myPlist = pack(mylist)
+  // Exercise: Lecture 5.4 at 12'45"
+  //
+  // Write a function that produces a runlength encoding of a list:
+  // Input:
+  //    List("a", "a", "a", "b", "c", "c", "a")
+  // Output:
+  //    List(("a", 3), ("b", 1), ("c", 2), ("a", 1))
+  //
+ 	def encode[T](xs: List[T]): List[(T, Int)] = xs match {
+ 		case Nil => Nil
+ 		case y :: ys => {
+ 			val (xs1, xs2) = xs span (x => (x==y))
+ 			(y, xs1.length) :: encode(xs2)
+ 		}
+ 		
+ 	}
+ 	
+ 	encode(mylist)
+
+
+
+}
 
 
 
