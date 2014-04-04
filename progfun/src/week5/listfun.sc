@@ -159,7 +159,12 @@ object listfun2 {
 
 }
 
+object reduction_of_lists {
 
+// Lecture 5.5: Exercise concat with foldRight (12'45")
+	def concat[T](xs: List[T], ys: List[T]): List[T] =
+		(xs foldRight ys) (_ :: _)
+}
 
 
 

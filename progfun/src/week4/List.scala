@@ -5,7 +5,7 @@ trait List[+T] {
 	def isEmpty: Boolean  // what kind of list, Empty or Cons?
 	def head: T           // the first element of the list
 	def tail: List[T]     // the remainder
-
+	def getElem(n: Int): T
 	// Lecture 4.4 -- Variance
 	def prepend [U >: T](elem: U): List[U] = new Cons(elem, this)
 
@@ -14,6 +14,12 @@ trait List[+T] {
 class Cons[T](val head: T, val tail: List[T]) extends List[T] {
 	// Recall: val is evaluated once; def is evaluated each time it is referenced.
 	def isEmpty = false
+	def getElem(n: Int): T = {
+		if (n<0) throw new IndexOutOfBoundsException
+		else if (n==0) head
+		else if (tail isEmpty) throw new IndexOutOfBoundsException
+		else tail getElem(n-1)
+	}
 }
 
 
@@ -32,6 +38,7 @@ object Nil extends List[Nothing] {
   def isEmpty: Boolean = true
   def head: Nothing = throw new NoSuchElementException("Nil.head")
   def tail: Nothing = throw new NoSuchElementException("Nil.tail")
+  def getElem(n: Int): Nothing = throw new NoSuchElementException("Nil.getElem")
 }
 
 object test {
